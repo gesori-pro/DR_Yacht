@@ -88,13 +88,18 @@ const Lobby = {
     async createRoom() {
         if (!this.validateNickname()) return;
 
+        const btn = document.getElementById('create-room-btn');
+        if (btn) btn.disabled = true;
+
         try {
+            console.log('[Lobby] 방 생성 요청 시작');
             UI.showLoading('방을 만드는 중...');
 
             const result = await Room.createRoom(this.nickname);
             this.saveNickname();
 
             UI.hideLoading();
+            console.log('[Lobby] 방 생성 성공, 화면 전환 시도', result);
             UI.displayRoomCode(result.roomCode);
             UI.showScreen('waiting-room');
 
@@ -103,8 +108,11 @@ const Lobby = {
 
             UI.showToast(`방이 생성되었습니다! 코드: ${result.roomCode}`, 'success');
         } catch (error) {
+            console.error('[Lobby] 방 생성 실패', error);
             UI.hideLoading();
             UI.showToast(error.message || '방 생성 실패', 'error');
+        } finally {
+            if (btn) btn.disabled = false;
         }
     },
 
@@ -125,13 +133,18 @@ const Lobby = {
             return;
         }
 
+        const btn = document.getElementById('join-room-btn');
+        if (btn) btn.disabled = true;
+
         try {
+            console.log('[Lobby] 방 참가 요청 시작:', roomCode);
             UI.showLoading('방에 참가하는 중...');
 
             const result = await Room.joinRoomByCode(roomCode, this.nickname);
             this.saveNickname();
 
             UI.hideLoading();
+            console.log('[Lobby] 방 참가 성공, 화면 전환 시도', result);
             UI.displayRoomCode(result.roomCode);
             UI.showScreen('waiting-room');
 
@@ -140,8 +153,11 @@ const Lobby = {
 
             UI.showToast('방에 참가했습니다!', 'success');
         } catch (error) {
+            console.error('[Lobby] 방 참가 실패', error);
             UI.hideLoading();
             UI.showToast(error.message || '방 참가 실패', 'error');
+        } finally {
+            if (btn) btn.disabled = false;
         }
     },
 
@@ -149,13 +165,18 @@ const Lobby = {
     async randomMatch() {
         if (!this.validateNickname()) return;
 
+        const btn = document.getElementById('random-match-btn');
+        if (btn) btn.disabled = true;
+
         try {
+            console.log('[Lobby] 랜덤 매칭 요청 시작');
             UI.showLoading('매칭 중...');
 
             const result = await Room.joinRandomMatch(this.nickname);
             this.saveNickname();
 
             UI.hideLoading();
+            console.log('[Lobby] 랜덤 매칭 성공, 화면 전환 시도', result);
             UI.displayRoomCode(result.roomCode);
             UI.showScreen('waiting-room');
 
@@ -164,8 +185,11 @@ const Lobby = {
 
             UI.showToast('대기실 입장!', 'success');
         } catch (error) {
+            console.error('[Lobby] 랜덤 매칭 실패', error);
             UI.hideLoading();
             UI.showToast(error.message || '매칭 실패', 'error');
+        } finally {
+            if (btn) btn.disabled = false;
         }
     }
 };

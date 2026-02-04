@@ -145,6 +145,53 @@
     font-size: 1.5rem;
     font-weight: bold;
     color: white;
+    display: block;
+    margin-bottom: 15px;
+}
+
+/* 상대 점수표 */
+.opponent-scoreboard {
+    background: var(--bg-card);
+    border-radius: var(--border-radius);
+    padding: 15px;
+    max-height: 400px;
+    overflow-y: auto;
+    pointer-events: auto;
+    /* 스크롤 가능하게 */
+}
+
+.opponent-scoreboard .score-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--bg-secondary);
+    color: var(--color-text);
+    font-size: 0.9rem;
+}
+
+.opponent-scoreboard .score-item:last-child {
+    border-bottom: none;
+}
+
+.opponent-scoreboard .score-item.filled {
+    background: rgba(152, 216, 200, 0.2);
+}
+
+.opponent-scoreboard .score-item .category {
+    font-weight: 500;
+}
+
+.opponent-scoreboard .score-item .value {
+    font-weight: bold;
+    color: var(--color-secondary);
+}
+
+.opponent-scoreboard .total-row {
+    background: var(--color-primary);
+    color: white;
+    font-weight: bold;
+    margin-top: 10px;
+    border-radius: var(--border-radius);
 }
 
 /* =====================================================

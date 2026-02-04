@@ -126,6 +126,9 @@ const Templates = {
         <div id="opponent-turn-overlay" class="opponent-turn-overlay hidden">
             <div class="opponent-turn-content">
                 <span id="opponent-turn-text">플레이어님의 턴</span>
+                <div id="opponent-scoreboard" class="opponent-scoreboard">
+                    <!-- 동적으로 점수표가 채워짐 -->
+                </div>
             </div>
         </div>
 

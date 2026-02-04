@@ -216,14 +216,79 @@ const Game = {
         // 상대 턴 오버레이 표시/숨김
         const overlay = document.getElementById('opponent-turn-overlay');
         const overlayText = document.getElementById('opponent-turn-text');
+        const opponentScoreboard = document.getElementById('opponent-scoreboard');
+
         if (overlay && overlayText) {
             if (isMyTurn) {
                 overlay.classList.add('hidden');
             } else {
                 overlay.classList.remove('hidden');
                 overlayText.textContent = `${playerName}님의 턴`;
+
+                // 상대 점수표 렌더링
+                if (opponentScoreboard) {
+                    this.renderOpponentScoreboard(opponentScoreboard, currentPlayerId, playerName);
+                }
             }
         }
+    },
+
+    // 상대 점수표 렌더링
+    renderOpponentScoreboard(container, playerId, playerName) {
+        const playerScores = this.scores[playerId] || {};
+
+        const categories = [
+            { key: 'ones', name: '1️⃣ Ones' },
+            { key: 'twos', name: '2️⃣ Twos' },
+            { key: 'threes', name: '3️⃣ Threes' },
+            { key: 'fours', name: '4️⃣ Fours' },
+            { key: 'fives', name: '5️⃣ Fives' },
+            { key: 'sixes', name: '6️⃣ Sixes' },
+            { key: 'threeOfAKind', name: '🎯 Three of a Kind' },
+            { key: 'fourOfAKind', name: '🎯 Four of a Kind' },
+            { key: 'fullHouse', name: '🏠 Full House' },
+            { key: 'smallStraight', name: '📏 Small Straight' },
+            { key: 'largeStraight', name: '📐 Large Straight' },
+            { key: 'chance', name: '❓ Chance' },
+            { key: 'yacht', name: '🚢 Yacht' }
+        ];
+
+        let html = '';
+        let total = 0;
+
+        categories.forEach(cat => {
+            const score = playerScores[cat.key];
+            const isFilled = score !== null && score !== undefined;
+            const displayValue = isFilled ? score : '-';
+
+            if (isFilled) total += score;
+
+            html += `
+                <div class="score-item ${isFilled ? 'filled' : ''}">
+                    <span class="category">${cat.name}</span>
+                    <span class="value">${displayValue}</span>
+                </div>
+            `;
+        });
+
+        // 보너스 계산
+        const upperSum = ['ones', 'twos', 'threes', 'fours', 'fives', 'sixes']
+            .reduce((sum, key) => sum + (playerScores[key] || 0), 0);
+        const bonus = upperSum >= 63 ? 35 : 0;
+        total += bonus;
+
+        html += `
+            <div class="score-item total-row">
+                <span class="category">⭐ 보너스 (63+)</span>
+                <span class="value">${bonus > 0 ? '+35' : '-'}</span>
+            </div>
+            <div class="score-item total-row">
+                <span class="category">총점</span>
+                <span class="value">${total}점</span>
+            </div>
+        `;
+
+        container.innerHTML = html;
     },
 
     // 턴 타이머 시작

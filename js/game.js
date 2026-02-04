@@ -114,20 +114,19 @@ const Game = {
             WaitingRoom.updatePlayers(players, this.roomData?.hostId);
         } else if (this.roomData?.status === 'playing') {
             this.updatePlayerBar();
-        }
 
-        // 플레이어 퇴장 체크 (나 혼자 남았을 때)
-        const activePlayerIds = Object.keys(players);
-        if (activePlayerIds.length === 1) {
-            const winnerId = activePlayerIds[0];
-            const winnerName = players[winnerId]?.nickname || '플레이어';
+            // 플레이어 퇴장 체크 (나 혼자 남았을 때)
+            const activePlayerIds = Object.keys(players);
+            if (activePlayerIds.length === 1) {
+                const winnerId = activePlayerIds[0];
 
-            UI.showToast('다른 플레이어가 모두 나갔습니다. 게임을 종료합니다.', 'info');
+                UI.showToast('다른 플레이어가 모두 나갔습니다. 게임을 종료합니다.', 'info');
 
-            // 3초 후 결과 화면으로
-            setTimeout(() => {
-                this.showResults();
-            }, 3000);
+                // 3초 후 결과 화면으로
+                setTimeout(() => {
+                    this.showResults();
+                }, 3000);
+            }
         }
     },
 

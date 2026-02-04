@@ -33,10 +33,27 @@ const Game = {
         // ui.js에서 호출하므로 여기서 getElementById 해도 됨 (DOM 존재함).
         const rollBtn = document.getElementById('roll-dice-btn');
         if (rollBtn) {
-            // 중복 방지? addEventListener는 중복되어도 함수 레퍼런스가 다르면 중복됨.
-            // 익명 함수 ()=>this.rollDice()는 매번 다른 함수임.
-            // 하지만 화면이 새로 그려졌으므로(innerHTML) 상관없음.
             rollBtn.addEventListener('click', () => this.rollDice());
+        }
+
+        // 주사위 클릭 (이벤트 위임)
+        const diceContainer = document.querySelector('.dice-container');
+        if (diceContainer) {
+            diceContainer.addEventListener('click', (e) => {
+                const diceEl = e.target.closest('.dice');
+                if (diceEl) {
+                    const index = parseInt(diceEl.id.split('-')[1]);
+
+                    if (!this.isMyTurn()) {
+                        UI.showToast('당신의 턴이 아닙니다!', 'warning');
+                        return;
+                    }
+
+                    if (window.Dice) {
+                        window.Dice.toggleKeep(index);
+                    }
+                }
+            });
         }
 
         // 스코어 카테고리 클릭
@@ -52,9 +69,7 @@ const Game = {
     // 화면 초기화 (이벤트 및 상태)
     setupScreen() {
         this.setupEventListeners();
-        if (window.Dice) {
-            window.Dice.setupClickEvents();
-        }
+        // Dice.setupClickEvents는 이벤트 위임으로 대체됨
     },
 
 

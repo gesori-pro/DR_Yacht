@@ -377,6 +377,30 @@
     font-size: 1.3rem;
 }
 
+/* 상대 턴일 때 스코어보드 스타일 */
+.scoreboard.opponent-view {
+    background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+    border: 3px solid var(--color-secondary);
+}
+
+.scoreboard.opponent-view h3 {
+    color: #2e7d32;
+    background: linear-gradient(135deg, var(--color-secondary), #66bb6a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.scoreboard.opponent-view .score-row {
+    background: rgba(255, 255, 255, 0.8);
+    cursor: default;
+}
+
+.scoreboard.opponent-view .score-row:hover {
+    transform: none;
+    box-shadow: none;
+}
+
 /* 스코어 섹션 */
 .score-section {
     margin-bottom: 15px;

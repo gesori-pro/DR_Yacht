@@ -109,14 +109,19 @@ const Dice = {
         const value = this.values[index];
         const faces = diceEl.querySelectorAll('.dice-face');
 
-        // 모든 면의 내용 초기화
+        // 모든 면에 현재 값의 눈금 표시 (회전 중 빈 면 방지)
         faces.forEach(face => {
-            face.innerHTML = '';
-        });
+            face.innerHTML = ''; // 초기화
 
-        // 앞면에 눈금 표시
-        const frontFace = diceEl.querySelector('.dice-face.front');
-        frontFace.textContent = value;
+            const positions = this.dotPositions[value] || [];
+            positions.forEach(pos => {
+                const dot = document.createElement('div');
+                dot.className = 'dice-dot';
+                dot.style.left = `${pos[0]}%`;
+                dot.style.top = `${pos[1]}%`;
+                face.appendChild(dot);
+            });
+        });
     },
 
     // 디스플레이 업데이트

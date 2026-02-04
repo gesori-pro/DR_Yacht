@@ -212,6 +212,7 @@
     background: var(--color-primary);
     border-radius: 50%;
     position: absolute;
+    transform: translate(-50%, -50%);
 }
 
 /* 주사위 액션 버튼 */

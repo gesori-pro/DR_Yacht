@@ -247,6 +247,7 @@ const UI = {
             const segment = document.createElement('div');
             segment.className = 'roulette-segment';
             segment.style.backgroundColor = colors[i % colors.length];
+            segment.style.color = '#333'; // 텍스트 색상 추가
             segment.style.transform = `rotate(${segmentAngle * i - 45}deg) skewY(${90 - segmentAngle}deg)`;
             segment.innerHTML = `<span style="transform: skewY(${segmentAngle - 90}deg) rotate(${segmentAngle / 2}deg)">${player.nickname}</span>`;
             wheel.appendChild(segment);

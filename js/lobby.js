@@ -162,7 +162,7 @@ const Lobby = {
             // 대기실 초기화
             WaitingRoom.init();
 
-            UI.showToast('매칭 완료!', 'success');
+            UI.showToast('대기실 입장!', 'success');
         } catch (error) {
             UI.hideLoading();
             UI.showToast(error.message || '매칭 실패', 'error');

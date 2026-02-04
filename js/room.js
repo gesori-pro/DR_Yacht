@@ -48,7 +48,9 @@ const Room = {
             await database.ref(`rooms/${roomId}`).set(roomData);
 
             // 플레이어 추가
-            await database.ref(`rooms/${roomId}/players/${userId}`).set(playerData);
+            const pRef = database.ref(`rooms/${roomId}/players/${userId}`);
+            await pRef.set(playerData);
+            pRef.onDisconnect().remove(); // 연결 끊기면 자동 삭제
 
             this.currentRoom = roomId;
             this.setupRoomListeners(roomId);
@@ -100,7 +102,9 @@ const Room = {
                 joinedAt: firebase.database.ServerValue.TIMESTAMP
             };
 
-            await database.ref(`rooms/${roomId}/players/${userId}`).set(playerData);
+            const pRef = database.ref(`rooms/${roomId}/players/${userId}`);
+            await pRef.set(playerData);
+            pRef.onDisconnect().remove(); // 연결 끊기면 자동 삭제
 
             this.currentRoom = roomId;
             this.setupRoomListeners(roomId);
@@ -322,6 +326,9 @@ const Room = {
         if (window.Game && Game.onRoomUpdate) {
             Game.onRoomUpdate(data);
         }
+
+        // 방장이 있는지 확인하고 없으면 승계 (내가 방에 있고, 호스트가 없을 때)
+        this.checkHostExistence(data);
     },
 
     onPlayersUpdate(players) {
@@ -335,6 +342,43 @@ const Room = {
 
         if (window.Game && Game.onPlayersUpdate) {
             Game.onPlayersUpdate(players);
+        }
+
+        // 방장 존재 재확인
+        if (this.cachedRoomData) {
+            this.checkHostExistence(this.cachedRoomData, players);
+        }
+    },
+
+    // 방장 존재 여부 확인 및 승계
+    checkHostExistence(roomData, players = null) {
+        if (!roomData || !roomData.hostId) return;
+
+        const currentPlayers = players || this.cachedPlayers;
+        if (!currentPlayers) return;
+
+        const userId = getCurrentUserId();
+        // 내가 방에 없으면 무시
+        if (!currentPlayers[userId]) return;
+
+        // 현재 방장이 플레이어 목록에 있는지 확인
+        if (!currentPlayers[roomData.hostId]) {
+            console.log('방장이 없습니다. 새로운 방장을 선출합니다.');
+
+            // 참가 순서대로 정렬 (joinedAt 기준)
+            const sortedPlayers = Object.entries(currentPlayers).sort((a, b) => {
+                return (a[1].joinedAt || 0) - (b[1].joinedAt || 0);
+            });
+
+            if (sortedPlayers.length > 0) {
+                const newHostId = sortedPlayers[0][0]; // 가장 오래된 플레이어
+
+                // 내가 새로운 방장이면 DB 업데이트
+                if (newHostId === userId) {
+                    console.log('내가 새로운 방장이 되었습니다:', userId);
+                    database.ref(`rooms/${roomData.roomCode}/hostId`).set(userId).catch(console.error);
+                }
+            }
         }
     },
 

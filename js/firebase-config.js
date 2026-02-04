@@ -21,7 +21,7 @@ function initializeFirebase() {
         app = firebase.initializeApp(firebaseConfig);
         auth = firebase.auth();
         database = firebase.database();
-        
+
         // 익명 로그인
         return signInAnonymously();
     } else {
@@ -53,11 +53,8 @@ function getDbRef(path) {
     return database.ref(path);
 }
 
-export { 
-    initializeFirebase, 
-    signInAnonymously, 
-    getCurrentUserId, 
-    getDbRef,
-    database,
-    auth 
-};
+// 전역으로 내보내기 (비모듈 방식)
+window.initializeFirebase = initializeFirebase;
+window.signInAnonymously = signInAnonymously;
+window.getCurrentUserId = getCurrentUserId;
+window.getDbRef = getDbRef;

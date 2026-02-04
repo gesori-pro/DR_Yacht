@@ -224,7 +224,10 @@ const Dice = {
         const diceElements = document.querySelectorAll('.dice');
         diceElements.forEach((diceEl, index) => {
             diceEl.addEventListener('click', () => {
-                if (!Game.isMyTurn()) return;
+                if (!Game.isMyTurn()) {
+                    UI.showToast('당신의 턴이 아닙니다!', 'warning');
+                    return;
+                }
                 this.toggleKeep(index);
             });
         });

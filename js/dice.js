@@ -94,6 +94,7 @@ const Dice = {
 
         if (this.rollsLeft === 0) {
             // 굴림 횟수 소진 시 킵 변경 불가
+            UI.showToast('점수를 선택해주세요!', 'info');
             return;
         }
 

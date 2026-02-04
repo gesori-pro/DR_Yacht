@@ -309,9 +309,16 @@ const Room = {
         this.unsubscribers = [];
     },
 
-    // 콜백 함수들 (Game에서 오버라이드)
+    // 콜백 함수들
     onRoomUpdate(data) {
         console.log('Room updated:', data);
+        this.cachedRoomData = data;
+
+        // 대기실 상태면 WaitingRoom 업데이트
+        if (data.status === 'waiting' && window.WaitingRoom) {
+            WaitingRoom.updatePlayers(this.cachedPlayers || {}, data.hostId);
+        }
+
         if (window.Game && Game.onRoomUpdate) {
             Game.onRoomUpdate(data);
         }
@@ -319,6 +326,13 @@ const Room = {
 
     onPlayersUpdate(players) {
         console.log('Players updated:', players);
+        this.cachedPlayers = players;
+
+        // 대기실 상태면 WaitingRoom 업데이트
+        if (this.cachedRoomData?.status === 'waiting' && window.WaitingRoom) {
+            WaitingRoom.updatePlayers(players, this.cachedRoomData?.hostId);
+        }
+
         if (window.Game && Game.onPlayersUpdate) {
             Game.onPlayersUpdate(players);
         }

@@ -45,12 +45,18 @@ const Game = {
 
     // 방 데이터 업데이트 콜백
     onRoomUpdate(data) {
+        const prevStatus = this.roomData?.status;
         this.roomData = data;
 
         if (data.status === 'waiting') {
             // 대기실 상태
             WaitingRoom.updatePlayers(this.players, data.hostId);
         } else if (data.status === 'playing') {
+            // 게임 시작 (대기실 -> 게임)
+            if (prevStatus === 'waiting' && UI.currentScreen === 'waiting-room') {
+                this.handleGameStart(data);
+            }
+
             // 게임 중 - 턴 정보 업데이트
             this.updateTurnDisplay();
             this.startTurnTimer();
@@ -58,6 +64,30 @@ const Game = {
             // 게임 종료
             this.showResults();
         }
+    },
+
+    // 게임 시작 시퀀스 처리
+    async handleGameStart(data) {
+        // 룰렛 화면으로 전환
+        UI.showScreen('turn-order');
+
+        // 플레이어 정보 준비
+        const players = Object.values(data.turnOrder).map(id => ({
+            id: id,
+            nickname: this.players[id]?.nickname || '플레이어'
+        }));
+
+        const orderedPlayers = data.turnOrder.map(id => ({
+            id: id,
+            nickname: this.players[id]?.nickname || '플레이어'
+        }));
+
+        // 룰렛 애니메이션
+        await UI.playRouletteAnimation(players, orderedPlayers);
+
+        // 게임 화면으로 전환 및 시작
+        await Utils.delay(1000);
+        this.start();
     },
 
     // 플레이어 업데이트 콜백

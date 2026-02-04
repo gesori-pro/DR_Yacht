@@ -254,29 +254,10 @@ const WaitingRoom = {
             this.stopTimer();
             UI.showLoading('게임을 시작하는 중...');
 
-            const result = await Room.startGame();
+            // 게임 시작 (DB 업데이트 -> 리스너 트리거 -> onRoomUpdate에서 UI 전환)
+            await Room.startGame();
 
             UI.hideLoading();
-
-            // 턴 순서 결정 화면으로 이동
-            UI.showScreen('turn-order');
-
-            // 룰렛 애니메이션
-            const players = Object.values(result.turnOrder).map(id => ({
-                id: id,
-                nickname: result.players[id]?.nickname || '플레이어'
-            }));
-
-            const orderedPlayers = result.turnOrder.map(id => ({
-                id: id,
-                nickname: result.players[id]?.nickname || '플레이어'
-            }));
-
-            await UI.playRouletteAnimation(players, orderedPlayers);
-
-            // 게임 화면으로 이동
-            await Utils.delay(1000);
-            Game.start();
 
         } catch (error) {
             UI.hideLoading();

@@ -57,13 +57,6 @@ const Game = {
         }
     },
 
-    // 화면 초기화 (이벤트 및 상태)
-    setupScreen() {
-        this.setupEventListeners();
-        if (window.Dice) {
-            window.Dice.setupClickEvents();
-        }
-    },
 
     // 방 데이터 업데이트 콜백
     onRoomUpdate(data) {
@@ -113,49 +106,53 @@ const Game = {
     },
 
     // 플레이어 업데이트 콜백
+    // 플레이어 업데이트 콜백
     onPlayersUpdate(players) {
         this.players = players;
 
-    } else if(this.roomData?.status === 'playing') {
-        this.updatePlayerBar();
-
-// 플레이어 퇴장 체크 (나 혼자 남았을 때)
-const activePlayerIds = Object.keys(players);
-if (activePlayerIds.length === 1) {
-    const winnerId = activePlayerIds[0];
-    const winnerName = players[winnerId]?.nickname || '플레이어';
-
-    UI.showToast('다른 플레이어가 모두 나갔습니다. 게임을 종료합니다.', 'info');
-
-    // 3초 후 결과 화면으로
-    setTimeout(() => {
-        this.showResults();
-    }, 3000);
-}
+        if (this.roomData?.status === 'waiting') {
+            WaitingRoom.updatePlayers(players, this.roomData?.hostId);
+        } else if (this.roomData?.status === 'playing') {
+            this.updatePlayerBar();
         }
-    },
 
-// 게임 상태 업데이트 콜백
-onGameStateUpdate(gameState) {
-    this.gameState = gameState;
+        // 플레이어 퇴장 체크 (나 혼자 남았을 때)
+        const activePlayerIds = Object.keys(players);
+        if (activePlayerIds.length === 1) {
+            const winnerId = activePlayerIds[0];
+            const winnerName = players[winnerId]?.nickname || '플레이어';
 
-    // 주사위 동기화
-    if (gameState.dice) {
-        Dice.setValues(gameState.dice);
-    }
-    if (gameState.kept) {
-        Dice.setKept(gameState.kept);
-    }
-    if (gameState.rollsLeft !== undefined) {
-        Dice.setRollsLeft(gameState.rollsLeft);
-    }
+            UI.showToast('다른 플레이어가 모두 나갔습니다. 게임을 종료합니다.', 'info');
 
-    // 내 턴인지 확인하여 버튼 활성화
-    UI.setRollButtonEnabled(this.isMyTurn() && Dice.rollsLeft > 0);
+            // 3초 후 결과 화면으로
+            setTimeout(() => {
+                this.showResults();
+            }, 3000);
+        }
+    }
 },
 
-// 점수 업데이트 콜백
-onScoresUpdate(scores) {
+    // 게임 상태 업데이트 콜백
+    onGameStateUpdate(gameState) {
+        this.gameState = gameState;
+
+        // 주사위 동기화
+        if (gameState.dice) {
+            Dice.setValues(gameState.dice);
+        }
+        if (gameState.kept) {
+            Dice.setKept(gameState.kept);
+        }
+        if (gameState.rollsLeft !== undefined) {
+            Dice.setRollsLeft(gameState.rollsLeft);
+        }
+
+        // 내 턴인지 확인하여 버튼 활성화
+        UI.setRollButtonEnabled(this.isMyTurn() && Dice.rollsLeft > 0);
+    },
+
+        // 점수 업데이트 콜백
+        onScoresUpdate(scores) {
     this.scores = scores;
 
     // 내 점수판 업데이트

@@ -28,8 +28,14 @@ const Game = {
     // 이벤트 리스너 설정
     setupEventListeners() {
         // 주사위 굴리기 버튼
+        // 동적 생성이므로 이벤트 위임 또는 initScreenEvents에서 처리
+        // 하지만 기존 코드는 getElementById로 직접 걸었음.
+        // ui.js에서 호출하므로 여기서 getElementById 해도 됨 (DOM 존재함).
         const rollBtn = document.getElementById('roll-dice-btn');
         if (rollBtn) {
+            // 중복 방지? addEventListener는 중복되어도 함수 레퍼런스가 다르면 중복됨.
+            // 익명 함수 ()=>this.rollDice()는 매번 다른 함수임.
+            // 하지만 화면이 새로 그려졌으므로(innerHTML) 상관없음.
             rollBtn.addEventListener('click', () => this.rollDice());
         }
 
@@ -41,6 +47,22 @@ const Game = {
                 this.selectCategory(category);
             });
         });
+    },
+
+    // 화면 초기화 (이벤트 및 상태)
+    setupScreen() {
+        this.setupEventListeners();
+        if (window.Dice) {
+            window.Dice.setupClickEvents();
+        }
+    },
+
+    // 화면 초기화 (이벤트 및 상태)
+    setupScreen() {
+        this.setupEventListeners();
+        if (window.Dice) {
+            window.Dice.setupClickEvents();
+        }
     },
 
     // 방 데이터 업데이트 콜백
@@ -319,8 +341,8 @@ showResults() {
         }))
         .sort((a, b) => b.score - a.score);
 
-    UI.updateResultScreen(rankings);
     UI.showScreen('result');
+    UI.updateResultScreen(rankings);
 },
 
     // 게임 종료 및 로비로

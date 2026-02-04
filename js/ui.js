@@ -7,16 +7,52 @@ const UI = {
     currentScreen: 'lobby',
 
     // 화면 전환
+    // 화면 전환
     showScreen(screenName) {
-        const screens = document.querySelectorAll('.screen');
-        screens.forEach(screen => {
-            screen.classList.remove('active');
-        });
+        const app = document.getElementById('app');
+        if (!app) return;
 
-        const targetScreen = document.getElementById(`${screenName}-screen`);
-        if (targetScreen) {
-            targetScreen.classList.add('active');
+        // 템플릿 로드 (Templates 객체는 templates.js에 정의됨)
+        const template = window.Templates ? window.Templates[screenName] : null;
+        if (template) {
+            app.innerHTML = template;
             this.currentScreen = screenName;
+
+            // 화면별 이벤트 및 초기화
+            this.initScreenEvents(screenName);
+        } else {
+            console.error(`Template not found: ${screenName}`);
+        }
+    },
+
+    // 화면별 이벤트 바인딩 및 초기화
+    initScreenEvents(screenName) {
+        switch (screenName) {
+            case 'lobby':
+                if (window.Lobby) window.Lobby.init();
+                break;
+            case 'waiting-room':
+                if (window.WaitingRoom) window.WaitingRoom.init();
+                break;
+            case 'turn-order':
+                break;
+            case 'game':
+                if (window.Game) {
+                    if (typeof window.Game.setupScreen === 'function') {
+                        window.Game.setupScreen();
+                    } else {
+                        // fallback
+                        window.Game.setupEventListeners();
+                        if (window.Dice) window.Dice.setupClickEvents();
+                    }
+                }
+                break;
+            case 'result':
+                const backBtn = document.getElementById('back-to-lobby-btn');
+                if (backBtn && window.Game) {
+                    backBtn.addEventListener('click', () => window.Game.backToLobby());
+                }
+                break;
         }
     },
 

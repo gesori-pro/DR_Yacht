@@ -100,11 +100,8 @@ const Lobby = {
 
             UI.hideLoading();
             console.log('[Lobby] 방 생성 성공, 화면 전환 시도', result);
-            UI.displayRoomCode(result.roomCode);
             UI.showScreen('waiting-room');
-
-            // 대기실 초기화
-            WaitingRoom.init();
+            UI.displayRoomCode(result.roomCode);
 
             UI.showToast(`방이 생성되었습니다! 코드: ${result.roomCode}`, 'success');
         } catch (error) {
@@ -145,11 +142,8 @@ const Lobby = {
 
             UI.hideLoading();
             console.log('[Lobby] 방 참가 성공, 화면 전환 시도', result);
-            UI.displayRoomCode(result.roomCode);
             UI.showScreen('waiting-room');
-
-            // 대기실 초기화
-            WaitingRoom.init();
+            UI.displayRoomCode(result.roomCode);
 
             UI.showToast('방에 참가했습니다!', 'success');
         } catch (error) {
@@ -177,11 +171,8 @@ const Lobby = {
 
             UI.hideLoading();
             console.log('[Lobby] 랜덤 매칭 성공, 화면 전환 시도', result);
-            UI.displayRoomCode(result.roomCode);
             UI.showScreen('waiting-room');
-
-            // 대기실 초기화
-            WaitingRoom.init();
+            UI.displayRoomCode(result.roomCode);
 
             UI.showToast('대기실 입장!', 'success');
         } catch (error) {

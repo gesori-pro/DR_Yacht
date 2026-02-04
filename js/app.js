@@ -22,14 +22,9 @@ async function initApp() {
         await initializeFirebase();
         UI.hideLoading();
 
-        // 로비 초기화
-        Lobby.init();
+        // 메인 화면 로드 (로비)
+        UI.showScreen('lobby');
 
-        // 로비로 돌아가기 버튼
-        const backToLobbyBtn = document.getElementById('back-to-lobby-btn');
-        if (backToLobbyBtn) {
-            backToLobbyBtn.addEventListener('click', () => Game.backToLobby());
-        }
 
         // 페이지 이탈 시 방 나가기
         window.addEventListener('beforeunload', async (e) => {

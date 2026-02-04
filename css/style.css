@@ -1,0 +1,336 @@
+/* =====================================================
+   Yacht Dice - 메인 스타일시트
+   파스텔 테마 + 네이비 다크모드
+   ===================================================== */
+
+/* CSS 변수 정의 */
+:root {
+    /* 라이트 모드 (파스텔) */
+    --bg-primary: #FFF5F8;
+    --bg-secondary: #FFFFFF;
+    --bg-card: #FFFFFF;
+    --color-primary: #FFB6C1;
+    --color-secondary: #98D8C8;
+    --color-accent: #DDA0DD;
+    --color-text: #4A4A4A;
+    --color-text-light: #888888;
+    --color-danger: #FF6B6B;
+    --color-success: #4ECDC4;
+    --color-warning: #FFE66D;
+    --shadow-soft: 0 4px 15px rgba(0, 0, 0, 0.08);
+    --shadow-medium: 0 8px 25px rgba(0, 0, 0, 0.12);
+    --border-radius: 16px;
+    --border-radius-small: 8px;
+    --transition-fast: 0.2s ease;
+    --transition-medium: 0.3s ease;
+}
+
+/* 다크 모드 (네이비) */
+[data-theme="dark"] {
+    --bg-primary: #1A1A2E;
+    --bg-secondary: #16213E;
+    --bg-card: #1F2A48;
+    --color-primary: #E94560;
+    --color-secondary: #0F3460;
+    --color-accent: #533483;
+    --color-text: #EAEAEA;
+    --color-text-light: #A0A0A0;
+    --shadow-soft: 0 4px 15px rgba(0, 0, 0, 0.3);
+    --shadow-medium: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+/* 기본 리셋 */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Jua', sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--color-text);
+    min-height: 100vh;
+    transition: background-color var(--transition-medium), color var(--transition-medium);
+    overflow-x: hidden;
+}
+
+/* 화면 전환 */
+.screen {
+    display: none;
+    min-height: 100vh;
+    padding: 20px;
+    animation: fadeIn 0.3s ease;
+}
+
+.screen.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 컨테이너 */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* 다크모드 토글 버튼 */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    background: var(--bg-card);
+    box-shadow: var(--shadow-soft);
+    cursor: pointer;
+    z-index: 1000;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: var(--shadow-medium);
+}
+
+.theme-toggle .icon-moon {
+    display: none;
+}
+
+[data-theme="dark"] .theme-toggle .icon-sun {
+    display: none;
+}
+
+[data-theme="dark"] .theme-toggle .icon-moon {
+    display: block;
+}
+
+/* 버튼 스타일 */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 28px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-family: inherit;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    box-shadow: var(--shadow-soft);
+}
+
+.btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+}
+
+.btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    color: white;
+}
+
+.btn-secondary {
+    background: var(--bg-card);
+    color: var(--color-text);
+    border: 2px solid var(--color-primary);
+}
+
+.btn-accent {
+    background: linear-gradient(135deg, var(--color-secondary), var(--color-accent));
+    color: white;
+}
+
+.btn-danger {
+    background: var(--color-danger);
+    color: white;
+}
+
+.btn-large {
+    padding: 18px 36px;
+    font-size: 1.3rem;
+}
+
+.btn-icon-only {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: var(--bg-card);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-size: 1.2rem;
+}
+
+.btn-icon-only:hover {
+    background: var(--color-primary);
+}
+
+/* 입력 필드 */
+input[type="text"] {
+    width: 100%;
+    padding: 14px 18px;
+    border: 2px solid transparent;
+    border-radius: var(--border-radius);
+    background: var(--bg-card);
+    color: var(--color-text);
+    font-family: inherit;
+    font-size: 1rem;
+    transition: all var(--transition-fast);
+    box-shadow: var(--shadow-soft);
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px rgba(255, 182, 193, 0.2);
+}
+
+input[type="text"]::placeholder {
+    color: var(--color-text-light);
+}
+
+/* 게임 타이틀 */
+.game-title {
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+}
+
+.subtitle {
+    text-align: center;
+    color: var(--color-text-light);
+    margin-bottom: 40px;
+    font-size: 1.2rem;
+}
+
+/* 토스트 알림 */
+.toast-container {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.toast {
+    padding: 14px 24px;
+    border-radius: var(--border-radius);
+    background: var(--bg-card);
+    color: var(--color-text);
+    box-shadow: var(--shadow-medium);
+    animation: slideUp 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+    font-size: 1rem;
+}
+
+.toast.success {
+    background: var(--color-success);
+    color: white;
+}
+
+.toast.error {
+    background: var(--color-danger);
+    color: white;
+}
+
+.toast.warning {
+    background: var(--color-warning);
+    color: #333;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+    to { opacity: 0; }
+}
+
+/* 숨김 클래스 */
+.hidden {
+    display: none !important;
+}
+
+/* 반응형 - 태블릿 */
+@media (max-width: 1023px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .game-title {
+        font-size: 2.5rem;
+    }
+}
+
+/* 반응형 - 모바일 */
+@media (max-width: 767px) {
+    html {
+        font-size: 14px;
+    }
+    
+    .screen {
+        padding: 15px;
+    }
+    
+    .container {
+        padding: 10px;
+    }
+    
+    .game-title {
+        font-size: 2rem;
+    }
+    
+    .btn {
+        padding: 12px 20px;
+        font-size: 1rem;
+    }
+    
+    .btn-large {
+        padding: 14px 28px;
+        font-size: 1.1rem;
+    }
+    
+    .theme-toggle {
+        width: 44px;
+        height: 44px;
+        top: 15px;
+        right: 15px;
+    }
+}

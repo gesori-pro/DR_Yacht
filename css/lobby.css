@@ -1,0 +1,296 @@
+/* =====================================================
+   Yacht Dice - 로비 & 대기실 스타일
+   ===================================================== */
+
+/* 로비 화면 */
+#lobby-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#lobby-screen .container {
+    text-align: center;
+}
+
+/* 닉네임 섹션 */
+.nickname-section {
+    margin-bottom: 40px;
+}
+
+.nickname-section label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    color: var(--color-text);
+}
+
+.nickname-section input {
+    max-width: 300px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+.char-count {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: var(--color-text-light);
+}
+
+/* 방 옵션 */
+.room-options {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 350px;
+    margin: 0 auto;
+}
+
+.join-room-section {
+    display: flex;
+    gap: 10px;
+}
+
+.join-room-section input {
+    flex: 1;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 1.2rem;
+}
+
+.join-room-section .btn {
+    flex-shrink: 0;
+}
+
+/* =====================================================
+   대기실 화면
+   ===================================================== */
+
+#waiting-room-screen .container {
+    text-align: center;
+}
+
+#waiting-room-screen h2 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: var(--color-primary);
+}
+
+/* 방 코드 표시 */
+.room-code-display {
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 25px;
+    background: var(--bg-card);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-soft);
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+}
+
+.room-code-display strong {
+    font-size: 1.8rem;
+    color: var(--color-primary);
+    letter-spacing: 3px;
+}
+
+/* 타이머 */
+.waiting-timer {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    background: var(--color-secondary);
+    border-radius: var(--border-radius);
+    color: white;
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+}
+
+.waiting-timer strong {
+    font-size: 1.5rem;
+}
+
+/* 플레이어 목록 */
+.player-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    max-width: 500px;
+    margin: 0 auto 30px;
+}
+
+.player-slot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px;
+    background: var(--bg-card);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-soft);
+    border: 2px dashed var(--color-text-light);
+    transition: all var(--transition-fast);
+    min-height: 70px;
+}
+
+.player-slot.filled {
+    border-style: solid;
+    border-color: var(--color-primary);
+}
+
+.player-slot.filled.is-host {
+    border-color: var(--color-warning);
+    background: linear-gradient(135deg, rgba(255, 230, 109, 0.1), transparent);
+}
+
+.player-slot .player-crown {
+    display: none;
+}
+
+.player-slot.filled.is-host .player-crown {
+    display: inline;
+}
+
+.player-slot .player-name {
+    font-size: 1.1rem;
+    color: var(--color-text-light);
+}
+
+.player-slot.filled .player-name {
+    color: var(--color-text);
+    font-weight: bold;
+}
+
+/* 대기실 버튼 */
+.waiting-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+/* =====================================================
+   턴 순서 결정 화면
+   ===================================================== */
+
+#turn-order-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#turn-order-screen .container {
+    text-align: center;
+}
+
+#turn-order-screen h2 {
+    font-size: 2rem;
+    margin-bottom: 40px;
+    color: var(--color-primary);
+}
+
+/* 룰렛 컨테이너 */
+.roulette-container {
+    width: 300px;
+    height: 300px;
+    margin: 0 auto 30px;
+    position: relative;
+    border-radius: 50%;
+    background: var(--bg-card);
+    box-shadow: var(--shadow-medium);
+    overflow: hidden;
+}
+
+.roulette-wheel {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transition: transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+}
+
+.roulette-segment {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    left: 50%;
+    top: 0;
+    transform-origin: 0% 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 30px;
+    font-weight: bold;
+    color: white;
+    font-size: 0.9rem;
+}
+
+.roulette-pointer {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 25px solid var(--color-primary);
+    z-index: 10;
+}
+
+/* 순서 결과 */
+.turn-order-result {
+    padding: 20px;
+    background: var(--bg-card);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-soft);
+}
+
+.turn-order-result h3 {
+    margin-bottom: 15px;
+    color: var(--color-primary);
+}
+
+.turn-order-list {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.turn-order-item {
+    padding: 10px 20px;
+    background: var(--bg-primary);
+    border-radius: var(--border-radius-small);
+    font-size: 1.1rem;
+}
+
+.turn-order-item .order-number {
+    font-weight: bold;
+    color: var(--color-primary);
+    margin-right: 8px;
+}
+
+/* 반응형 */
+@media (max-width: 767px) {
+    .player-list {
+        grid-template-columns: 1fr;
+    }
+
+    .room-code-display {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .waiting-actions {
+        flex-direction: column;
+    }
+
+    .roulette-container {
+        width: 250px;
+        height: 250px;
+    }
+}

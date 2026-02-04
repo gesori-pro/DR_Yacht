@@ -311,6 +311,7 @@ showResults() {
 
     // 순위 계산
     const rankings = Object.entries(this.scores)
+        .filter(([userId]) => this.players[userId]) // 접속 중인 플레이어만 표시
         .map(([userId, scores]) => ({
             id: userId,
             nickname: this.players[userId]?.nickname || '플레이어',

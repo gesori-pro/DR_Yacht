@@ -143,11 +143,15 @@ const UI = {
 
     // 대기실 플레이어 목록 업데이트
     updateWaitingRoom(players, hostId) {
+        // 객체를 배열로 변환하고 입장 순서(order)대로 정렬
+        const playerList = Object.values(players || {})
+            .sort((a, b) => (a.order || 0) - (b.order || 0));
+
         for (let i = 0; i < 4; i++) {
             const slot = document.getElementById(`player-slot-${i}`);
             if (!slot) continue;
 
-            const player = players[i];
+            const player = playerList[i]; // 정렬된 배열에서 가져옴
             const nameEl = slot.querySelector('.player-name');
 
             if (player) {

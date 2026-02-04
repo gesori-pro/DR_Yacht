@@ -183,6 +183,13 @@ const Dice = {
 
     // 특별 조합 하이라이트
     highlightCombinations() {
+        // 기존 하이라이트 제거 (반짝임 효과만 제거하고 selectable은 유지해야 함? 
+        // 아니, selectable은 updateScorePreview에서 관리함. 
+        // highlightCombinations는 completed-highlight만 관리함.
+        document.querySelectorAll('.score-row').forEach(row => {
+            row.classList.remove('completed-highlight', 'yacht-highlight');
+        });
+
         const combinations = Scoreboard.getCompletedCombinations(this.values);
 
         combinations.forEach(combo => {

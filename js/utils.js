@@ -3,14 +3,11 @@
 // =====================================================
 
 const Utils = {
-    // 방 코드 생성 (6자리 대문자)
+    // 방 코드 생성 (4자리 숫자)
     generateRoomCode() {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let code = '';
-        for (let i = 0; i < 6; i++) {
-            code += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return code;
+        // 0000 ~ 9999 랜덤 숫자
+        const code = Math.floor(Math.random() * 10000);
+        return code.toString().padStart(4, '0');
     },
 
     // 시간 포맷 (mm:ss)

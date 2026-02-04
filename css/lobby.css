@@ -40,13 +40,105 @@
     color: var(--color-text-light);
 }
 
-/* 방 옵션 */
-.room-options {
+/* 로비 헤더 (버전 표시) */
+.lobby-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.version {
+    font-size: 0.8rem;
+    color: var(--color-text-light);
+    background: var(--bg-secondary);
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+/* 온라인 상태 표시 */
+.online-status {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin-bottom: 30px;
+    padding: 12px 20px;
+    background: var(--bg-card);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-soft);
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    color: var(--color-text);
+}
+
+.status-item strong {
+    color: var(--color-secondary);
+    font-size: 1.1rem;
+}
+
+.status-icon {
+    font-size: 1.2rem;
+}
+
+/* 게임 모드 선택 */
+.game-modes {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    max-width: 350px;
+    max-width: 400px;
     margin: 0 auto;
+}
+
+.mode-section {
+    background: var(--bg-card);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-soft);
+}
+
+.mode-section h3 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    color: var(--color-primary);
+}
+
+.mode-desc {
+    font-size: 0.9rem;
+    color: var(--color-text-light);
+    margin-bottom: 15px;
+}
+
+.mode-divider {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: var(--color-text-light);
+}
+
+.mode-divider::before,
+.mode-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--color-border);
+}
+
+.mode-divider span {
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+/* 커스텀 방 버튼들 */
+.custom-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .join-room-section {
@@ -57,9 +149,9 @@
 .join-room-section input {
     flex: 1;
     text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 3px;
     font-size: 1.2rem;
+    font-weight: bold;
 }
 
 .join-room-section .btn {

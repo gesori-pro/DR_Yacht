@@ -9,6 +9,7 @@ const Lobby = {
     init() {
         this.setupEventListeners();
         this.loadSavedNickname();
+        this.startOnlineTracking();
     },
 
     // 이벤트 리스너 설정
@@ -49,11 +50,65 @@ const Lobby = {
                 }
             });
 
-            // 대문자로 자동 변환
+            // 숫자만 허용
             roomCodeInput.addEventListener('input', (e) => {
-                e.target.value = e.target.value.toUpperCase();
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
             });
         }
+    },
+
+    // 온라인 상태 추적 시작
+    startOnlineTracking() {
+        if (!firebase || !firebase.database) {
+            console.warn('Firebase not initialized');
+            return;
+        }
+
+        const db = firebase.database();
+
+        // 내 접속 상태 등록
+        const myPresenceRef = db.ref(`presence/${getCurrentUserId()}`);
+        const connectedRef = db.ref('.info/connected');
+
+        connectedRef.on('value', (snapshot) => {
+            if (snapshot.val() === true) {
+                myPresenceRef.set({
+                    status: 'online',
+                    lastSeen: firebase.database.ServerValue.TIMESTAMP
+                });
+                myPresenceRef.onDisconnect().remove();
+            }
+        });
+
+        // 온라인 유저 수 감시
+        db.ref('presence').on('value', (snapshot) => {
+            const onlineCount = snapshot.numChildren();
+            this.updateOnlineCount(onlineCount);
+        });
+
+        // 플레이 중인 유저 수 감시 (대기실 + 게임 중)
+        db.ref('rooms').on('value', (snapshot) => {
+            let playingCount = 0;
+            snapshot.forEach((roomSnap) => {
+                const room = roomSnap.val();
+                if (room.players) {
+                    playingCount += Object.keys(room.players).length;
+                }
+            });
+            this.updatePlayingCount(playingCount);
+        });
+    },
+
+    // 온라인 유저 수 UI 업데이트
+    updateOnlineCount(count) {
+        const el = document.getElementById('online-count');
+        if (el) el.textContent = count;
+    },
+
+    // 플레이 중 유저 수 UI 업데이트
+    updatePlayingCount(count) {
+        const el = document.getElementById('playing-count');
+        if (el) el.textContent = count;
     },
 
     // 저장된 닉네임 불러오기

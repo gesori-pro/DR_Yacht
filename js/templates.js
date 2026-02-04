@@ -2,8 +2,23 @@ const Templates = {
     'lobby': `
     <section id="lobby-screen" class="screen active">
         <div class="container">
-            <h1 class="game-title">🎲 Yacht Dice</h1>
+            <div class="lobby-header">
+                <h1 class="game-title">🎲 Yacht Dice</h1>
+                <span class="version">v1.0.0</span>
+            </div>
             <p class="subtitle">4인 실시간 온라인 게임</p>
+            
+            <!-- 온라인 상태 표시 -->
+            <div class="online-status">
+                <div class="status-item">
+                    <span class="status-icon">🌐</span>
+                    <span>접속 중: <strong id="online-count">-</strong>명</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-icon">🎮</span>
+                    <span>플레이 중: <strong id="playing-count">-</strong>명</span>
+                </div>
+            </div>
             
             <!-- 닉네임 입력 -->
             <div class="nickname-section">
@@ -12,22 +27,39 @@ const Templates = {
                 <p class="char-count"><span id="char-count">0</span>/10</p>
             </div>
             
-            <!-- 방 옵션 -->
-            <div class="room-options">
-                <button id="create-room-btn" class="btn btn-primary">
-                    <span class="btn-icon">🏠</span>
-                    방 만들기
-                </button>
-                
-                <div class="join-room-section">
-                    <input type="text" id="room-code-input" maxlength="6" placeholder="방 코드 입력">
-                    <button id="join-room-btn" class="btn btn-secondary">참가</button>
+            <!-- 게임 모드 선택 -->
+            <div class="game-modes">
+                <!-- 랜덤 매칭 -->
+                <div class="mode-section random-mode">
+                    <h3>⚡ 빠른 매칭</h3>
+                    <p class="mode-desc">랜덤한 유저와 바로 게임!</p>
+                    <button id="random-match-btn" class="btn btn-accent btn-large">
+                        <span class="btn-icon">🎯</span>
+                        랜덤 매칭
+                    </button>
                 </div>
                 
-                <button id="random-match-btn" class="btn btn-accent">
-                    <span class="btn-icon">🎯</span>
-                    랜덤 매칭
-                </button>
+                <div class="mode-divider">
+                    <span>OR</span>
+                </div>
+                
+                <!-- 커스텀 방 -->
+                <div class="mode-section custom-mode">
+                    <h3>🏠 커스텀 방</h3>
+                    <p class="mode-desc">친구와 함께 플레이!</p>
+                    
+                    <div class="custom-buttons">
+                        <button id="create-room-btn" class="btn btn-primary">
+                            <span class="btn-icon">➕</span>
+                            방 만들기
+                        </button>
+                        
+                        <div class="join-room-section">
+                            <input type="text" id="room-code-input" maxlength="4" placeholder="4자리 숫자" inputmode="numeric" pattern="[0-9]*">
+                            <button id="join-room-btn" class="btn btn-secondary">참가</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>`,

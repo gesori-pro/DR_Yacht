@@ -129,8 +129,7 @@ const Game = {
                 this.showResults();
             }, 3000);
         }
-    }
-},
+    },
 
     // 게임 상태 업데이트 콜백
     onGameStateUpdate(gameState) {
@@ -151,203 +150,203 @@ const Game = {
         UI.setRollButtonEnabled(this.isMyTurn() && Dice.rollsLeft > 0);
     },
 
-        // 점수 업데이트 콜백
-        onScoresUpdate(scores) {
-    this.scores = scores;
+    // 점수 업데이트 콜백
+    onScoresUpdate(scores) {
+        this.scores = scores;
 
-    // 내 점수판 업데이트
-    const myScores = scores[this.currentUserId];
-    if (myScores) {
-        UI.updateScoreboard(myScores);
-    }
+        // 내 점수판 업데이트
+        const myScores = scores[this.currentUserId];
+        if (myScores) {
+            UI.updateScoreboard(myScores);
+        }
 
-    // 플레이어 바 점수 업데이트
-    this.updatePlayerBar();
-},
+        // 플레이어 바 점수 업데이트
+        this.updatePlayerBar();
+    },
 
-// 플레이어 바 업데이트
-updatePlayerBar() {
-    if (!this.roomData?.turnOrder) return;
+    // 플레이어 바 업데이트
+    updatePlayerBar() {
+        if (!this.roomData?.turnOrder) return;
 
-    const playerList = this.roomData.turnOrder.map(userId => {
-        const player = this.players[userId];
-        const score = this.scores[userId];
-        const totalScore = score ? Scoreboard.calculateTotalScore(score) : 0;
+        const playerList = this.roomData.turnOrder.map(userId => {
+            const player = this.players[userId];
+            const score = this.scores[userId];
+            const totalScore = score ? Scoreboard.calculateTotalScore(score) : 0;
 
-        return {
-            id: userId,
-            nickname: player?.nickname || '플레이어',
-            score: totalScore,
-            disconnected: !player
-        };
-    });
+            return {
+                id: userId,
+                nickname: player?.nickname || '플레이어',
+                score: totalScore,
+                disconnected: !player
+            };
+        });
 
-    UI.updatePlayerBar(playerList, this.roomData.currentTurn);
-},
+        UI.updatePlayerBar(playerList, this.roomData.currentTurn);
+    },
 
-// 턴 표시 업데이트
-updateTurnDisplay() {
-    if (!this.roomData?.turnOrder) return;
+    // 턴 표시 업데이트
+    updateTurnDisplay() {
+        if (!this.roomData?.turnOrder) return;
 
-    const currentPlayerId = this.roomData.turnOrder[this.roomData.currentTurn];
-    const currentPlayer = this.players[currentPlayerId];
-    const playerName = currentPlayer?.nickname || '플레이어';
+        const currentPlayerId = this.roomData.turnOrder[this.roomData.currentTurn];
+        const currentPlayer = this.players[currentPlayerId];
+        const playerName = currentPlayer?.nickname || '플레이어';
 
-    UI.updateTurnInfo(
-        this.isMyTurn() ? '당신' : playerName,
-        this.turnTimeLeft
-    );
-},
-
-// 턴 타이머 시작
-startTurnTimer() {
-    this.stopTurnTimer();
-    this.turnTimeLeft = 45;
-
-    this.turnTimer = setInterval(async () => {
-        this.turnTimeLeft--;
         UI.updateTurnInfo(
-            this.isMyTurn() ? '당신' : this.getCurrentPlayerName(),
+            this.isMyTurn() ? '당신' : playerName,
             this.turnTimeLeft
         );
+    },
 
-        if (this.turnTimeLeft <= 0) {
-            this.stopTurnTimer();
+    // 턴 타이머 시작
+    startTurnTimer() {
+        this.stopTurnTimer();
+        this.turnTimeLeft = 45;
 
-            // 내 턴이면 자동으로 점수 선택
-            if (this.isMyTurn()) {
-                await this.autoSelectScore();
+        this.turnTimer = setInterval(async () => {
+            this.turnTimeLeft--;
+            UI.updateTurnInfo(
+                this.isMyTurn() ? '당신' : this.getCurrentPlayerName(),
+                this.turnTimeLeft
+            );
+
+            if (this.turnTimeLeft <= 0) {
+                this.stopTurnTimer();
+
+                // 내 턴이면 자동으로 점수 선택
+                if (this.isMyTurn()) {
+                    await this.autoSelectScore();
+                }
             }
+        }, 1000);
+    },
+
+    // 턴 타이머 정지
+    stopTurnTimer() {
+        if (this.turnTimer) {
+            clearInterval(this.turnTimer);
+            this.turnTimer = null;
         }
-    }, 1000);
-},
+    },
 
-// 턴 타이머 정지
-stopTurnTimer() {
-    if (this.turnTimer) {
-        clearInterval(this.turnTimer);
-        this.turnTimer = null;
-    }
-},
+    // 현재 플레이어 이름 가져오기
+    getCurrentPlayerName() {
+        if (!this.roomData?.turnOrder) return '플레이어';
+        const currentPlayerId = this.roomData.turnOrder[this.roomData.currentTurn];
+        return this.players[currentPlayerId]?.nickname || '플레이어';
+    },
 
-// 현재 플레이어 이름 가져오기
-getCurrentPlayerName() {
-    if (!this.roomData?.turnOrder) return '플레이어';
-    const currentPlayerId = this.roomData.turnOrder[this.roomData.currentTurn];
-    return this.players[currentPlayerId]?.nickname || '플레이어';
-},
-
-// 내 턴인지 확인
-isMyTurn() {
-    if (!this.roomData?.turnOrder) return false;
-    const currentPlayerId = this.roomData.turnOrder[this.roomData.currentTurn];
-    return currentPlayerId === this.currentUserId;
-},
+    // 내 턴인지 확인
+    isMyTurn() {
+        if (!this.roomData?.turnOrder) return false;
+        const currentPlayerId = this.roomData.turnOrder[this.roomData.currentTurn];
+        return currentPlayerId === this.currentUserId;
+    },
 
     // 주사위 굴리기
     async rollDice() {
-    if (!this.isMyTurn()) {
-        UI.showToast('당신의 턴이 아닙니다!', 'warning');
-        return;
-    }
+        if (!this.isMyTurn()) {
+            UI.showToast('당신의 턴이 아닙니다!', 'warning');
+            return;
+        }
 
-    if (Dice.rollsLeft <= 0) {
-        UI.showToast('더 이상 굴릴 수 없습니다!', 'warning');
-        return;
-    }
+        if (Dice.rollsLeft <= 0) {
+            UI.showToast('더 이상 굴릴 수 없습니다!', 'warning');
+            return;
+        }
 
-    const success = await Dice.roll();
+        const success = await Dice.roll();
 
-    if (success) {
-        // Firebase에 동기화
-        await Room.updateGameState({
-            dice: Dice.getValues(),
-            kept: Dice.kept,
-            rollsLeft: Dice.rollsLeft
-        });
-    }
-},
+        if (success) {
+            // Firebase에 동기화
+            await Room.updateGameState({
+                dice: Dice.getValues(),
+                kept: Dice.kept,
+                rollsLeft: Dice.rollsLeft
+            });
+        }
+    },
 
     // 카테고리 선택
     async selectCategory(category) {
-    if (!this.isMyTurn()) {
-        UI.showToast('당신의 턴이 아닙니다!', 'warning');
-        return;
-    }
+        if (!this.isMyTurn()) {
+            UI.showToast('당신의 턴이 아닙니다!', 'warning');
+            return;
+        }
 
-    if (Dice.rollsLeft === 3) {
-        UI.showToast('먼저 주사위를 굴려주세요!', 'warning');
-        return;
-    }
+        if (Dice.rollsLeft === 3) {
+            UI.showToast('먼저 주사위를 굴려주세요!', 'warning');
+            return;
+        }
 
-    // 이미 채워진 카테고리인지 확인
-    const myScores = this.scores[this.currentUserId] || {};
-    if (myScores[category] !== null && myScores[category] !== undefined) {
-        UI.showToast('이미 선택한 카테고리입니다!', 'warning');
-        return;
-    }
+        // 이미 채워진 카테고리인지 확인
+        const myScores = this.scores[this.currentUserId] || {};
+        if (myScores[category] !== null && myScores[category] !== undefined) {
+            UI.showToast('이미 선택한 카테고리입니다!', 'warning');
+            return;
+        }
 
-    // 점수 계산
-    const score = Scoreboard.calculateScore(category, Dice.getValues());
+        // 점수 계산
+        const score = Scoreboard.calculateScore(category, Dice.getValues());
 
-    // 점수 저장
-    await Room.updateScore(this.currentUserId, category, score);
+        // 점수 저장
+        await Room.updateScore(this.currentUserId, category, score);
 
-    // 하이라이트 제거
-    Dice.clearHighlights();
+        // 하이라이트 제거
+        Dice.clearHighlights();
 
-    // 다음 턴으로
-    this.stopTurnTimer();
-    await Room.nextTurn();
-},
+        // 다음 턴으로
+        this.stopTurnTimer();
+        await Room.nextTurn();
+    },
 
     // 자동 점수 선택 (시간 초과 시)
     async autoSelectScore() {
-    const myScores = this.scores[this.currentUserId] || {};
-    const available = Scoreboard.getAvailableCategories(myScores);
+        const myScores = this.scores[this.currentUserId] || {};
+        const available = Scoreboard.getAvailableCategories(myScores);
 
-    if (available.length === 0) return;
+        if (available.length === 0) return;
 
-    // 가장 낮은 점수 카테고리 선택 (페널티)
-    let minCategory = available[0];
-    let minScore = Infinity;
+        // 가장 낮은 점수 카테고리 선택 (페널티)
+        let minCategory = available[0];
+        let minScore = Infinity;
 
-    for (const category of available) {
-        const score = Scoreboard.calculateScore(category, Dice.getValues());
-        if (score < minScore) {
-            minScore = score;
-            minCategory = category;
+        for (const category of available) {
+            const score = Scoreboard.calculateScore(category, Dice.getValues());
+            if (score < minScore) {
+                minScore = score;
+                minCategory = category;
+            }
         }
-    }
 
-    UI.showToast('시간 초과! 자동으로 선택되었습니다.', 'warning');
-    await this.selectCategory(minCategory);
-},
+        UI.showToast('시간 초과! 자동으로 선택되었습니다.', 'warning');
+        await this.selectCategory(minCategory);
+    },
 
-// 결과 화면 표시
-showResults() {
-    this.stopTurnTimer();
+    // 결과 화면 표시
+    showResults() {
+        this.stopTurnTimer();
 
-    // 순위 계산
-    const rankings = Object.entries(this.scores)
-        .filter(([userId]) => this.players[userId]) // 접속 중인 플레이어만 표시
-        .map(([userId, scores]) => ({
-            id: userId,
-            nickname: this.players[userId]?.nickname || '플레이어',
-            score: Scoreboard.calculateTotalScore(scores)
-        }))
-        .sort((a, b) => b.score - a.score);
+        // 순위 계산
+        const rankings = Object.entries(this.scores)
+            .filter(([userId]) => this.players[userId]) // 접속 중인 플레이어만 표시
+            .map(([userId, scores]) => ({
+                id: userId,
+                nickname: this.players[userId]?.nickname || '플레이어',
+                score: Scoreboard.calculateTotalScore(scores)
+            }))
+            .sort((a, b) => b.score - a.score);
 
-    UI.showScreen('result');
-    UI.updateResultScreen(rankings);
-},
+        UI.showScreen('result');
+        UI.updateResultScreen(rankings);
+    },
 
     // 게임 종료 및 로비로
     async backToLobby() {
-    this.stopTurnTimer();
-    await Room.leaveRoom();
-    UI.showScreen('lobby');
-}
+        this.stopTurnTimer();
+        await Room.leaveRoom();
+        UI.showScreen('lobby');
+    }
 };
 
 // 전역으로 내보내기

@@ -263,12 +263,12 @@ const WaitingRoom = {
 
             // 룰렛 애니메이션
             const players = Object.values(result.turnOrder).map(id => ({
-                oderId: oderId,
+                id: id,
                 nickname: result.players[id]?.nickname || '플레이어'
             }));
 
             const orderedPlayers = result.turnOrder.map(id => ({
-                oderId: oderId,
+                id: id,
                 nickname: result.players[id]?.nickname || '플레이어'
             }));
 

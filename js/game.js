@@ -114,7 +114,7 @@ const Game = {
             const totalScore = score ? Scoreboard.calculateTotalScore(score) : 0;
 
             return {
-                oderId: oderId,
+                id: userId,
                 nickname: player?.nickname || '플레이어',
                 score: totalScore,
                 disconnected: !player
@@ -270,7 +270,7 @@ const Game = {
         // 순위 계산
         const rankings = Object.entries(this.scores)
             .map(([userId, scores]) => ({
-                oderId: oderId,
+                id: userId,
                 nickname: this.players[userId]?.nickname || '플레이어',
                 score: Scoreboard.calculateTotalScore(scores)
             }))

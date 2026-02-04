@@ -153,7 +153,7 @@ const UI = {
             if (player) {
                 nameEl.textContent = player.nickname || '플레이어';
                 slot.classList.add('filled');
-                slot.classList.toggle('is-host', player.oderId === hostId);
+                slot.classList.toggle('is-host', player.userId === hostId);
             } else {
                 nameEl.textContent = '대기중...';
                 slot.classList.remove('filled', 'is-host');

@@ -94,7 +94,7 @@ const Room = {
             // 플레이어 추가
             const playerData = {
                 order: playerCount,
-                oderId: oderId,
+                userId: userId,
                 nickname: nickname,
                 score: 0,
                 joinedAt: firebase.database.ServerValue.TIMESTAMP

@@ -73,6 +73,7 @@ const Game = {
             }
 
             // 게임 중 - 턴 정보 업데이트
+            this.updatePlayerBar();
             this.updateTurnDisplay();
             this.startTurnTimer();
         } else if (data.status === 'finished') {

@@ -149,49 +149,84 @@
     margin-bottom: 15px;
 }
 
-/* 상대 점수표 */
+/* 상대 점수표 (2번 이미지 형식) */
 .opponent-scoreboard {
     background: var(--bg-card);
     border-radius: var(--border-radius);
-    padding: 15px;
-    max-height: 400px;
+    padding: 0;
+    max-height: 500px;
     overflow-y: auto;
     pointer-events: auto;
-    /* 스크롤 가능하게 */
+    min-width: 280px;
 }
 
-.opponent-scoreboard .score-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 12px;
-    border-bottom: 1px solid var(--bg-secondary);
-    color: var(--color-text);
-    font-size: 0.9rem;
-}
-
-.opponent-scoreboard .score-item:last-child {
-    border-bottom: none;
-}
-
-.opponent-scoreboard .score-item.filled {
-    background: rgba(152, 216, 200, 0.2);
-}
-
-.opponent-scoreboard .score-item .category {
-    font-weight: 500;
-}
-
-.opponent-scoreboard .score-item .value {
-    font-weight: bold;
-    color: var(--color-secondary);
-}
-
-.opponent-scoreboard .total-row {
+.opp-scoreboard-title {
     background: var(--color-primary);
     color: white;
+    text-align: center;
+    padding: 12px;
+    margin: 0;
+    font-size: 1.1rem;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.opp-section {
+    padding: 8px;
+}
+
+.opp-score-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    margin-bottom: 4px;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    border-left: 4px solid transparent;
+}
+
+.opp-score-row.filled {
+    background: rgba(152, 216, 200, 0.15);
+    border-left-color: var(--color-secondary);
+}
+
+.opp-score-row.bonus-row {
+    background: linear-gradient(135deg, #fff9c4, #fff59d);
+    border-left-color: #fbc02d;
+    margin-top: 8px;
+}
+
+.opp-category {
+    font-weight: 500;
+    color: var(--color-text);
+    font-size: 0.95rem;
+}
+
+.opp-value {
     font-weight: bold;
-    margin-top: 10px;
-    border-radius: var(--border-radius);
+    color: var(--color-secondary);
+    font-size: 1rem;
+}
+
+.opp-section-divider {
+    border-top: 2px dashed var(--color-border);
+    margin: 5px 15px;
+}
+
+.opp-total-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    color: white;
+    font-weight: bold;
+    font-size: 1.1rem;
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+}
+
+.opp-total-value {
+    font-size: 1.4rem;
 }
 
 /* =====================================================

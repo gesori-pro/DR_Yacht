@@ -233,17 +233,20 @@ const Game = {
         }
     },
 
-    // 상대 점수표 렌더링
+    // 상대 점수표 렌더링 (2번 이미지 형식)
     renderOpponentScoreboard(container, playerId, playerName) {
         const playerScores = this.scores[playerId] || {};
 
-        const categories = [
+        const upperCategories = [
             { key: 'ones', name: '1️⃣ Ones' },
             { key: 'twos', name: '2️⃣ Twos' },
             { key: 'threes', name: '3️⃣ Threes' },
             { key: 'fours', name: '4️⃣ Fours' },
             { key: 'fives', name: '5️⃣ Fives' },
-            { key: 'sixes', name: '6️⃣ Sixes' },
+            { key: 'sixes', name: '6️⃣ Sixes' }
+        ];
+
+        const lowerCategories = [
             { key: 'threeOfAKind', name: '🎯 Three of a Kind' },
             { key: 'fourOfAKind', name: '🎯 Four of a Kind' },
             { key: 'fullHouse', name: '🏠 Full House' },
@@ -253,42 +256,67 @@ const Game = {
             { key: 'yacht', name: '🚢 Yacht' }
         ];
 
-        let html = '';
         let total = 0;
 
-        categories.forEach(cat => {
+        // 상단 섹션 (1~6)
+        let upperHtml = '';
+        upperCategories.forEach(cat => {
             const score = playerScores[cat.key];
             const isFilled = score !== null && score !== undefined;
             const displayValue = isFilled ? score : '-';
-
             if (isFilled) total += score;
 
-            html += `
-                <div class="score-item ${isFilled ? 'filled' : ''}">
-                    <span class="category">${cat.name}</span>
-                    <span class="value">${displayValue}</span>
+            upperHtml += `
+                <div class="opp-score-row ${isFilled ? 'filled' : ''}">
+                    <span class="opp-category">${cat.name}</span>
+                    <span class="opp-value">${displayValue}</span>
                 </div>
             `;
         });
 
         // 보너스 계산
-        const upperSum = ['ones', 'twos', 'threes', 'fours', 'fives', 'sixes']
-            .reduce((sum, key) => sum + (playerScores[key] || 0), 0);
+        const upperSum = upperCategories.reduce((sum, cat) => sum + (playerScores[cat.key] || 0), 0);
         const bonus = upperSum >= 63 ? 35 : 0;
         total += bonus;
 
-        html += `
-            <div class="score-item total-row">
-                <span class="category">⭐ 보너스 (63+)</span>
-                <span class="value">${bonus > 0 ? '+35' : '-'}</span>
-            </div>
-            <div class="score-item total-row">
-                <span class="category">총점</span>
-                <span class="value">${total}점</span>
+        upperHtml += `
+            <div class="opp-score-row bonus-row">
+                <span class="opp-category">⭐ 보너스 (63+)</span>
+                <span class="opp-value">${bonus > 0 ? '+35' : '-'}</span>
             </div>
         `;
 
-        container.innerHTML = html;
+        // 하단 섹션 (조합들)
+        let lowerHtml = '';
+        lowerCategories.forEach(cat => {
+            const score = playerScores[cat.key];
+            const isFilled = score !== null && score !== undefined;
+            const displayValue = isFilled ? score : '-';
+            if (isFilled) total += score;
+
+            lowerHtml += `
+                <div class="opp-score-row ${isFilled ? 'filled' : ''}">
+                    <span class="opp-category">${cat.name}</span>
+                    <span class="opp-value">${displayValue}</span>
+                </div>
+            `;
+        });
+
+        // 전체 HTML 조합
+        container.innerHTML = `
+            <h4 class="opp-scoreboard-title">${playerName}님의 점수표</h4>
+            <div class="opp-section upper-section">
+                ${upperHtml}
+            </div>
+            <div class="opp-section-divider"></div>
+            <div class="opp-section lower-section">
+                ${lowerHtml}
+            </div>
+            <div class="opp-total-bar">
+                <span>총점</span>
+                <span class="opp-total-value">${total}</span>
+            </div>
+        `;
     },
 
     // 턴 타이머 시작

@@ -218,8 +218,8 @@ const Templates = {
 
         <!-- 스코어보드 -->
         <div class="scoreboard-area">
-            <div class="scoreboard">
-                <h3>점수표</h3>
+            <div class="scoreboard" id="main-scoreboard">
+                <h3 id="scoreboard-title">점수표</h3>
                 
                 <!-- 상단 섹션 -->
                 <div class="score-section upper-section">

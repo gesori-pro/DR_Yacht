@@ -213,24 +213,73 @@ const Game = {
             this.turnTimeLeft
         );
 
-        // 상대 턴 오버레이 표시/숨김
+        // 오버레이 항상 숨김 (더 이상 사용 안 함)
         const overlay = document.getElementById('opponent-turn-overlay');
-        const overlayText = document.getElementById('opponent-turn-text');
-        const opponentScoreboard = document.getElementById('opponent-scoreboard');
+        if (overlay) overlay.classList.add('hidden');
 
-        if (overlay && overlayText) {
+        // 메인 스코어보드 동적 변경
+        const scoreboard = document.getElementById('main-scoreboard');
+        const scoreboardTitle = document.getElementById('scoreboard-title');
+
+        if (scoreboard && scoreboardTitle) {
             if (isMyTurn) {
-                overlay.classList.add('hidden');
+                // 내 턴: 기본 스타일, 내 점수 표시
+                scoreboardTitle.textContent = '점수표';
+                scoreboard.classList.remove('opponent-view');
+                this.updateMyScoreDisplay();
             } else {
-                overlay.classList.remove('hidden');
-                overlayText.textContent = `${playerName}님의 턴`;
-
-                // 상대 점수표 렌더링
-                if (opponentScoreboard) {
-                    this.renderOpponentScoreboard(opponentScoreboard, currentPlayerId, playerName);
-                }
+                // 상대 턴: 다른 스타일, 상대 점수 표시
+                scoreboardTitle.textContent = `${playerName}님의 점수표`;
+                scoreboard.classList.add('opponent-view');
+                this.displayOpponentScores(currentPlayerId);
             }
         }
+    },
+
+    // 내 점수 표시 복원
+    updateMyScoreDisplay() {
+        const myScores = this.scores[this.currentUserId] || {};
+
+        document.querySelectorAll('.score-row[data-category]').forEach(row => {
+            const category = row.dataset.category;
+            const valueEl = row.querySelector('.score-value');
+            const score = myScores[category];
+
+            if (valueEl) {
+                if (score !== null && score !== undefined) {
+                    valueEl.textContent = score;
+                    row.classList.add('filled');
+                } else {
+                    valueEl.textContent = '-';
+                    row.classList.remove('filled');
+                }
+            }
+        });
+    },
+
+    // 상대방 점수 표시
+    displayOpponentScores(playerId) {
+        const opponentScores = this.scores[playerId] || {};
+
+        document.querySelectorAll('.score-row[data-category]').forEach(row => {
+            const category = row.dataset.category;
+            const valueEl = row.querySelector('.score-value');
+            const previewEl = row.querySelector('.score-preview');
+            const score = opponentScores[category];
+
+            // 미리보기 숨기기 (상대 턴이므로)
+            if (previewEl) previewEl.textContent = '';
+
+            if (valueEl) {
+                if (score !== null && score !== undefined) {
+                    valueEl.textContent = score;
+                    row.classList.add('filled');
+                } else {
+                    valueEl.textContent = '-';
+                    row.classList.remove('filled');
+                }
+            }
+        });
     },
 
     // 상대 점수표 렌더링 (2번 이미지 형식)

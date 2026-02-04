@@ -36,10 +36,10 @@ const Room = {
         };
 
         const playerData = {
-            oderId: 0,
-            oderId: oderId,
-            oderId: nickname,
-            oderId: 0,
+            order: 0,
+            userId: userId,
+            nickname: nickname,
+            score: 0,
             joinedAt: firebase.database.ServerValue.TIMESTAMP
         };
 
@@ -93,10 +93,10 @@ const Room = {
 
             // 플레이어 추가
             const playerData = {
-                oderId: playerCount,
+                order: playerCount,
                 oderId: oderId,
-                oderId: nickname,
-                oderId: 0,
+                nickname: nickname,
+                score: 0,
                 joinedAt: firebase.database.ServerValue.TIMESTAMP
             };
 

@@ -3,11 +3,13 @@
    ===================================================== */
 
 /* 로비 화면 */
-#lobby-screen {
+#lobby-screen.active {
     display: flex;
     align-items: center;
     justify-content: center;
 }
+
+
 
 #lobby-screen .container {
     text-align: center;
@@ -177,7 +179,7 @@
    턴 순서 결정 화면
    ===================================================== */
 
-#turn-order-screen {
+#turn-order-screen.active {
     display: flex;
     align-items: center;
     justify-content: center;

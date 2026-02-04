@@ -111,6 +111,43 @@
 }
 
 /* =====================================================
+   상대 턴 오버레이
+   ===================================================== */
+
+.opponent-turn-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    pointer-events: none;
+    /* 점수표 등 클릭 가능하게 */
+}
+
+.opponent-turn-overlay.hidden {
+    display: none;
+}
+
+.opponent-turn-content {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    padding: 20px 40px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-medium);
+    animation: pulse 2s infinite;
+}
+
+.opponent-turn-content span {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+}
+
+/* =====================================================
    주사위 영역
    ===================================================== */
 

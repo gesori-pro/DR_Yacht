@@ -122,6 +122,13 @@ const Templates = {
             </div>
         </div>
 
+        <!-- 상대 턴 오버레이 -->
+        <div id="opponent-turn-overlay" class="opponent-turn-overlay hidden">
+            <div class="opponent-turn-content">
+                <span id="opponent-turn-text">플레이어님의 턴</span>
+            </div>
+        </div>
+
         <!-- 주사위 영역 -->
         <div class="dice-area">
             <div class="dice-container">

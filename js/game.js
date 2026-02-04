@@ -206,11 +206,24 @@ const Game = {
         const currentPlayerId = this.roomData.turnOrder[this.roomData.currentTurn];
         const currentPlayer = this.players[currentPlayerId];
         const playerName = currentPlayer?.nickname || '플레이어';
+        const isMyTurn = this.isMyTurn();
 
         UI.updateTurnInfo(
-            this.isMyTurn() ? '당신' : playerName,
+            isMyTurn ? '당신' : playerName,
             this.turnTimeLeft
         );
+
+        // 상대 턴 오버레이 표시/숨김
+        const overlay = document.getElementById('opponent-turn-overlay');
+        const overlayText = document.getElementById('opponent-turn-text');
+        if (overlay && overlayText) {
+            if (isMyTurn) {
+                overlay.classList.add('hidden');
+            } else {
+                overlay.classList.remove('hidden');
+                overlayText.textContent = `${playerName}님의 턴`;
+            }
+        }
     },
 
     // 턴 타이머 시작

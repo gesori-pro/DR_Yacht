@@ -143,8 +143,13 @@ const Room = {
                     const players = playersSnapshot.val();
 
                     if (!players) {
-                        console.log(`[Zombie Cleanup] Empty room found: ${roomId}. Removing...`);
-                        await database.ref(`rooms/${roomId}`).remove();
+                        console.log(`[Zombie Cleanup] Empty room found: ${roomId}. Skipping...`);
+                        // 권한 문제로 삭제가 안 될 수 있으므로 그냥 스킵
+                        try {
+                            await database.ref(`rooms/${roomId}`).remove();
+                        } catch (e) {
+                            console.log(`[Zombie Cleanup] Cannot delete room ${roomId}:`, e.message);
+                        }
                         continue;
                     }
 

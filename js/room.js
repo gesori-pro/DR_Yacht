@@ -128,7 +128,7 @@ const Room = {
             const roomsSnapshot = await database.ref('rooms')
                 .orderByChild('status')
                 .equalTo('waiting')
-                .limitToFirst(10)
+                .limitToFirst(20)
                 .once('value');
 
             const rooms = roomsSnapshot.val();
@@ -137,8 +137,17 @@ const Room = {
                 // 참가 가능한 방 찾기
                 for (const roomId in rooms) {
                     const room = rooms[roomId];
+
+                    // 플레이어 수 확인 (유령 방 체크)
                     const playersSnapshot = await database.ref(`rooms/${roomId}/players`).once('value');
-                    const players = playersSnapshot.val() || {};
+                    const players = playersSnapshot.val();
+
+                    if (!players) {
+                        console.log(`[Zombie Cleanup] Empty room found: ${roomId}. Removing...`);
+                        await database.ref(`rooms/${roomId}`).remove();
+                        continue;
+                    }
+
                     const playerCount = Object.keys(players).length;
 
                     if (playerCount < room.maxPlayers) {
@@ -435,15 +444,40 @@ const Room = {
         const roomSnapshot = await database.ref(`rooms/${this.currentRoom}`).once('value');
         const roomData = roomSnapshot.val();
 
-        const nextTurn = (roomData.currentTurn + 1) % roomData.turnOrder.length;
+        // 현재 플레이어 목록 가져오기 (연결 끊긴 사람 확인용)
+        const playersSnapshot = await database.ref(`rooms/${this.currentRoom}/players`).once('value');
+        const players = playersSnapshot.val() || {};
+
+        // 다음 유효한 플레이어 찾기
+        let nextTurnIndex = roomData.currentTurn;
+        let foundValidPlayer = false;
+        const totalPlayers = roomData.turnOrder.length;
+
+        // 플레이어 수만큼 돌면서 확인
+        for (let i = 0; i < totalPlayers; i++) {
+            nextTurnIndex = (nextTurnIndex + 1) % totalPlayers;
+            const nextPlayerId = roomData.turnOrder[nextTurnIndex];
+
+            if (players[nextPlayerId]) {
+                foundValidPlayer = true;
+                break;
+            }
+        }
+
+        if (!foundValidPlayer) {
+            console.warn('유효한 플레이어가 없습니다. 게임을 종료합니다.');
+            await this.endGame();
+            return;
+        }
 
         // 라운드 체크 (모든 카테고리가 채워졌는지)
         const scoresSnapshot = await database.ref(`rooms/${this.currentRoom}/scores`).once('value');
         const scores = scoresSnapshot.val();
 
         let allComplete = true;
-        for (const oderId in scores) {
-            if (!Scoreboard.isScoreSheetComplete(scores[oderId])) {
+        for (const playerId in scores) {
+            // 현재 접속 중인 플레이어만 체크
+            if (players[playerId] && !Scoreboard.isScoreSheetComplete(scores[playerId])) {
                 allComplete = false;
                 break;
             }
@@ -455,7 +489,7 @@ const Room = {
         } else {
             // 다음 턴
             await database.ref(`rooms/${this.currentRoom}`).update({
-                currentTurn: nextTurn,
+                currentTurn: nextTurnIndex,
                 turnStartedAt: firebase.database.ServerValue.TIMESTAMP
             });
 

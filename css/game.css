@@ -392,13 +392,43 @@
 }
 
 .scoreboard.opponent-view .score-row {
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.9);
     cursor: default;
+    color: #333;
+}
+
+.scoreboard.opponent-view .score-row .category-name,
+.scoreboard.opponent-view .score-row .score-value {
+    color: #333;
 }
 
 .scoreboard.opponent-view .score-row:hover {
     transform: none;
     box-shadow: none;
+}
+
+/* 다크 모드에서의 상대방 점수판 스타일 */
+[data-theme="dark"] .scoreboard.opponent-view {
+    background: linear-gradient(135deg, #1e3a5f, #0f3460);
+    border: 3px solid #4a6fa5;
+}
+
+[data-theme="dark"] .scoreboard.opponent-view h3 {
+    color: #7eb8da;
+    background: linear-gradient(135deg, #5c8db8, #7eb8da);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+[data-theme="dark"] .scoreboard.opponent-view .score-row {
+    background: rgba(30, 58, 95, 0.8);
+    color: #eaeaea;
+}
+
+[data-theme="dark"] .scoreboard.opponent-view .score-row .category-name,
+[data-theme="dark"] .scoreboard.opponent-view .score-row .score-value {
+    color: #eaeaea;
 }
 
 /* 스코어 섹션 */

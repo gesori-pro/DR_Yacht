@@ -142,6 +142,25 @@ const Game = {
                 setTimeout(() => {
                     this.showResults();
                 }, 3000);
+                return;
+            }
+
+            // 현재 턴인 플레이어가 나갔는지 확인
+            if (this.roomData && this.roomData.turnOrder) {
+                const currentTurnPlayerId = this.roomData.turnOrder[this.roomData.currentTurn];
+
+                // 현재 턴 플레이어가 접속자 목록에 없으면
+                if (!players[currentTurnPlayerId]) {
+                    console.log('현재 턴 플레이어가 연결이 끊겼습니다. 처리 중...');
+
+                    // 내가 방장이라면 턴 넘기기
+                    Room.isHost().then(isHost => {
+                        if (isHost) {
+                            console.log('방장 권한으로 턴을 넘깁니다.');
+                            Room.nextTurn();
+                        }
+                    });
+                }
             }
         }
     },
@@ -169,10 +188,18 @@ const Game = {
     onScoresUpdate(scores) {
         this.scores = scores;
 
-        // 내 점수판 업데이트
-        const myScores = scores[this.currentUserId];
-        if (myScores) {
-            UI.updateScoreboard(myScores);
+        // 내 점수판 업데이트 (내 턴일 때만)
+        if (this.isMyTurn()) {
+            const myScores = scores[this.currentUserId];
+            if (myScores) {
+                UI.updateScoreboard(myScores);
+            }
+        } else {
+            // 상대 턴이면 상대 점수판 갱신
+            if (this.roomData?.turnOrder) {
+                const currentPlayerId = this.roomData.turnOrder[this.roomData.currentTurn];
+                this.displayOpponentScores(currentPlayerId);
+            }
         }
 
         // 플레이어 바 점수 업데이트

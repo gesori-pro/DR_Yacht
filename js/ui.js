@@ -119,10 +119,28 @@ const UI = {
         Utils.storage.set('theme', newTheme);
     },
 
-    // 테마 초기화
+    // 테마 초기화 (시스템 테마 자동 감지)
     initTheme() {
-        const savedTheme = Utils.storage.get('theme', 'light');
-        document.documentElement.setAttribute('data-theme', savedTheme);
+        const savedTheme = Utils.storage.get('theme', null);
+
+        if (savedTheme) {
+            // 저장된 테마가 있으면 사용
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        } else {
+            // 저장된 테마 없으면 시스템 테마 따라가기
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const systemTheme = prefersDark ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', systemTheme);
+        }
+
+        // 시스템 테마 변경 감지 (실시간)
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            // 저장된 테마가 없을 때만 자동 반영
+            if (!Utils.storage.get('theme', null)) {
+                const newTheme = e.matches ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', newTheme);
+            }
+        });
     },
 
     // 닉네임 글자수 카운터 업데이트

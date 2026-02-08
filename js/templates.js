@@ -4,7 +4,7 @@ const Templates = {
         <div class="container">
             <div class="lobby-header">
                 <h1 class="game-title">🎲 Yacht Dice</h1>
-                <span class="version">v1.0.1</span>
+                <span class="version">v1.0.2</span>
             </div>
             <p class="subtitle">4인 실시간 온라인 게임</p>
             
